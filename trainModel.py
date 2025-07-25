@@ -111,9 +111,6 @@
 # # plt.show()
 
 
-
-
-
 # import pickle
 # import time
 # import numpy as np
@@ -184,8 +181,6 @@
 # plt.show()
 
 
-
-
 import pickle
 import time
 import numpy as np
@@ -217,7 +212,8 @@ y = pickle.load(open('y.pkl', 'rb'))
 X = X / 255.0
 
 # Split the data: 80% training, 20% testing
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42)
 
 # Define the model
 model = Sequential()
@@ -228,16 +224,19 @@ model.add(Dense(128, activation='relu'))
 model.add(Dense(8, activation='softmax'))  # 8 classes for blood groups
 
 # Compile the model
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Use ImageDataGenerator for loading data without augmentation to avoid random transformations
 datagen = ImageDataGenerator()
 
-train_generator = datagen.flow(X_train, y_train, batch_size=16, shuffle=False)  # No shuffling to keep data order consistent
+# No shuffling to keep data order consistent
+train_generator = datagen.flow(X_train, y_train, batch_size=16, shuffle=False)
 test_generator = datagen.flow(X_test, y_test, batch_size=16, shuffle=False)
 
 # Train the model
-model.fit(train_generator, epochs=10, validation_data=test_generator, callbacks=[tensorboard])
+model.fit(train_generator, epochs=10,
+          validation_data=test_generator, callbacks=[tensorboard])
 
 # Save the trained model
 model.save('blood_group_model.h5')
@@ -245,7 +244,8 @@ print("Model saved as 'blood_group_model.h5'")
 
 # Predict on the test set
 y_pred = model.predict(X_test)
-y_pred_classes = np.argmax(y_pred, axis=1)  # Convert predictions to class labels
+# Convert predictions to class labels
+y_pred_classes = np.argmax(y_pred, axis=1)
 
 # Confusion matrix
 conf_matrix = confusion_matrix(y_test, y_pred_classes)
@@ -261,3 +261,5 @@ plt.title("Confusion Matrix")
 plt.ylabel("Actual Class")
 plt.xlabel("Predicted Class")
 plt.show()
+
+# test comment
